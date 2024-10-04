@@ -10,10 +10,10 @@
 #include "rules/zones/battlefield/battlefield.h"
 #include "rules/zones/stack/stack.h"
 #include "rules/cards/card.h"
+#include "rules/engine/turn.h"
 
 // Forward Declarations
 class ActionSpace;
-class Turn;
 class Mana;
 class StackObject;
 class Permanent;
@@ -41,7 +41,7 @@ public:
     ActionSpace action_space;
     Zones zones;
     std::unique_ptr<Turn> current_turn;
-    int current_player_index;
+    int active_player_index;
     std::map<int, Mana> mana_pools;
     int lands_played;
     int global_turn_count;
@@ -57,11 +57,12 @@ public:
 
     // Lookups
     std::vector<Card*> cardsInHand(Player& player);
+    Player& activePlayer();
     bool isActivePlayer(Player& player) const;
     bool canPlayLand(Player& player) const;
 
     // Game State Mutations
     void addMana(Player& player, const Mana& mana);
-    void castSpell(Card& card);
-    void playLand(Card& card);
+    void castSpell(Player& player, Card& card);
+    void playLand(Player& player, Card& card);
 };

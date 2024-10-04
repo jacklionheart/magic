@@ -4,7 +4,6 @@
 #include "rules/zones/stack/spell.h"
 #include "rules/engine/game.h"
 #include "rules/zones/battlefield/permanent.h"
-
 #include <spdlog/spdlog.h>
 
 Step::Step(Game& game) : game(game) {}

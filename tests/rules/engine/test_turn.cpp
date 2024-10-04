@@ -7,11 +7,11 @@
 
 TEST(TurnTest, ExecuteTurn) {
     // Set up a simple game with two players
-    std::vector<Cards> decks(2); // Empty decks for now
+    std::vector<std::vector<Card>> decks(2); // Empty decks for now
     Game game = Game(decks);
 
     // Simulate a turn
-    Turn turn = Turn(game.current_player, &game);
+    Turn turn = Turn(game.activePlayer(), game);
     // turn.execute();
 
     // // Check that the turn count has increased

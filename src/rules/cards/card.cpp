@@ -22,16 +22,20 @@ bool CardTypes::isNonCreaturePermanent() const {
     return isPermanent() && !isCreature();
 }
 
+bool CardTypes::isCastable() const {
+    return !isLand() && !types.empty();
+}
+
 bool CardTypes::isSpell() const {
-    return types.count(CardType::INSTANT) || types.count(CardType::SORCERY);
+    return types.contains(CardType::INSTANT) || types.contains(CardType::SORCERY);
 }
 
 bool CardTypes::isCreature() const {
-    return types.count(CardType::CREATURE);
+    return types.contains(CardType::CREATURE);
 }
 
 bool CardTypes::isLand() const {
-    return types.count(CardType::LAND);
+    return types.contains(CardType::LAND);
 }
 
 bool CardTypes::isPlaneswalker() const {
@@ -39,19 +43,19 @@ bool CardTypes::isPlaneswalker() const {
 }
 
 bool CardTypes::isEnchantment() const {
-    return types.count(CardType::ENCHANTMENT);
+    return types.contains(CardType::ENCHANTMENT);
 }
 
 bool CardTypes::isArtifact() const {
-    return types.count(CardType::ARTIFACT);
+    return types.contains(CardType::ARTIFACT);
 }
 
 bool CardTypes::isTribal() const {
-    return types.count(CardType::KINDRED);
+    return types.contains(CardType::KINDRED);
 }
 
 bool CardTypes::isBattle() const {
-    return types.count(CardType::BATTLE);
+    return types.contains(CardType::BATTLE);
 }
 
 Card::Card(const std::string& name,

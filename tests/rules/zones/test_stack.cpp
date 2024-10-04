@@ -1,4 +1,5 @@
-// tests/test_stack.cpp
+// tests/rules/zones/test_stack.cpp
+
 #include <gtest/gtest.h>
 #include <memory>
 #include "rules/zones/stack/stack.h"
@@ -6,31 +7,51 @@
 #include "rules/cards/card.h"
 #include "rules/engine/game.h"
 #include "rules/engine/player.h"
+#include "rules/engine/mana.h"          // Include Mana if needed
+#include "rules/cards/ability.h"        // Include if using abilities
+
+// Ensure all necessary headers are included
+// If 'ManaAbility' or other dependencies are used, include their headers
 
 TEST(StackTest, AddAndResolveSpell) {
-    // Set up a simple game and stack
-    std::vector<Cards> decks(2); // Empty decks
-    auto game = std::make_shared<Game>(decks);
+    // **1. Correct Decks Initialization**
+    // Initialize decks as a vector of vectors of Card objects
+    std::vector<std::vector<Card>> decks(2); // Two empty decks for two players
 
-    auto card = std::make_shared<Card>(
-        "Test Spell",
-        nullptr, // No mana cost
-        CardTypes({CardType::INSTANT}),
-        std::vector<std::string>(),
-        std::vector<std::string>(),
-        std::vector<std::shared_ptr<ActivatedAbilitySchema>>(),
-        "",
-        std::nullopt,
-        std::nullopt,
-        game->players[0]
+    // **2. Initialize the Game**
+    // Create a Game instance with the initialized decks
+    Game game(decks);
+
+    // **3. Create a Test Card**
+    // Create a Card object representing a spell (e.g., an Instant)
+    // Assuming 'Player' objects are already initialized in the Game constructor
+    // and that 'players[0]' is a valid reference
+    Card test_spell(
+        "Test Spell",                         // Name
+        std::nullopt,                         // No mana cost
+        CardTypes({CardType::INSTANT}),        // Card types (Instant)
+        std::vector<std::string>(),           // Supertypes
+        std::vector<std::string>(),           // Subtypes
+        std::vector<ManaAbility>(),           // Mana abilities (empty)
+        "",                                    // Text box
+        std::nullopt,                         // Power
+        std::nullopt,                         // Toughness
+        game.activePlayer()                     // Owner (Player 0)
     );
 
-    auto spell = std::make_shared<Spell>(card);
-    game->add_to_stack(spell);
+    // **4. Cast the Spell**
+    // Use the Game's castSpell method to add the spell to the stack
+    game.castSpell(game.activePlayer(), test_spell);
 
-    EXPECT_EQ(game->zones.stack.count(), 1);
+    // **5. Check Stack Size After Casting**
+    // Verify that the stack size is now 1
+    EXPECT_EQ(game.zones.stack.size(), 1);
 
-    game->zones.stack.resolve_top();
+    // **6. Resolve the Top Spell**
+    // Resolve the top spell on the stack
+    game.zones.stack.resolveTop();
 
-    EXPECT_EQ(game->zones.stack.count(), 0);
+    // **7. Check Stack Size After Resolving**
+    // Verify that the stack size is now 0
+    EXPECT_EQ(game.zones.stack.size(), 0);
 }

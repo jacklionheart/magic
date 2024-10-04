@@ -8,7 +8,7 @@ TEST(ManaCostTest, Parse) {
     EXPECT_EQ(cost.generic, 3);
     EXPECT_EQ(cost.cost[Color::RED], 1);
     EXPECT_EQ(cost.cost[Color::GREEN], 1);
-    EXPECT_EQ(cost.to_string(), "3RG");
+    EXPECT_EQ(cost.toString(), "3RG");
 }
 
 // Test for Mana::can_pay() and Mana::pay()
@@ -19,7 +19,7 @@ TEST(ManaTest, CanPayAndPay) {
     mana_pool.mana[Color::BLUE] = 1;
     mana_pool.mana[Color::COLORLESS] = 2;
 
-    EXPECT_TRUE(mana_pool.can_pay(cost));
+    EXPECT_TRUE(mana_pool.canPay(cost));
     mana_pool.pay(cost);
     EXPECT_EQ(mana_pool.mana[Color::WHITE], 0);
     EXPECT_EQ(mana_pool.mana[Color::BLUE], 0);
@@ -33,5 +33,5 @@ TEST(ManaTest, CannotPay) {
     mana_pool.mana[Color::BLACK] = 1;
     mana_pool.mana[Color::COLORLESS] = 1;
 
-    EXPECT_FALSE(mana_pool.can_pay(cost));
+    EXPECT_FALSE(mana_pool.canPay(cost));
 }

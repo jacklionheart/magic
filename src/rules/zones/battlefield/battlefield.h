@@ -4,9 +4,9 @@
 #include <map>
 #include <memory>
 #include "rules/zones/zone.h"
+#include "rules/zones/battlefield/permanent.h"
 
 // Forward declarations
-class Permanent;
 class Player;
 class Mana;
 class ManaCost;

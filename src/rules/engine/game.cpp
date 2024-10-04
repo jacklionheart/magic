@@ -25,7 +25,7 @@ Zones::Zones(Game& game)
       command(game)
 {}
 
-Game::Game(const []Card decks) : zones(*this), action_space(*this) {
+Game::Game(const std::vector<std::vector<Card>>& decks) : zones(*this), action_space(*this) {
     assert(decks.size() == 2);
     // Initialize players
     for (size_t i = 0; i < decks.size(); ++i) {
@@ -38,19 +38,19 @@ Game::Game(const []Card decks) : zones(*this), action_space(*this) {
         player_turn_counts[player.id] = 0;
     }
     global_turn_count = 0;
-    current_player_index = 0;
+    active_player_index = 0;
     lands_played = 0;
 }
 
 void Game::play() {
     while (!isGameOver()) {
-        current_turn = std::make_unique<Turn>(players[current_player_index], *this);
-        player_turn_counts[current_player_index]++;
+        current_turn = std::make_unique<Turn>(activePlayer(), *this);
+        player_turn_counts[active_player_index]++;
         global_turn_count++;
         current_turn->execute();
 
         // Move to the next player
-        current_player_index = (current_player_index + 1) % players.size();
+        active_player_index = (active_player_index + 1) % players.size();
     }
 }
 
@@ -93,8 +93,12 @@ std::vector<Card*> Game::cardsInHand(Player& player) {
     return zones.hand.cards[player.id];
 }
 
+Player& Game::activePlayer() {
+    return players.at(active_player_index);
+}
+
 bool Game::isActivePlayer(Player& player) const {
-    return player == players[current_player_index];
+    return player == players.at(active_player_index);
 }
 
 bool Game::canPlayLand(Player& player) const {
@@ -107,18 +111,21 @@ void Game::addMana(Player& player, const Mana& mana) {
     mana_pools[player.id].add(mana);
 }
 
-void Game::castSpell(Card& card) {
+void Game::castSpell(Player& player,Card& card) {
     if (card.types.isLand()) {
         throw std::invalid_argument("Land cards cannot be cast.");
+    }
+    if (card.owner != player) {
+        throw std::invalid_argument("Card does not belong to player.");
     }
     zones.stack.cast(card);   
 }
 
-void Game::playLand(Card& card) {
+void Game::playLand(Player& player, Card& card) {
     if (!card.types.isLand()) {
         throw std::invalid_argument("Only land cards can be played.");
     }
-    if (!canPlayLand(players[current_player_index])) {
+    if (!canPlayLand(player)) {
         throw std::logic_error("Cannot play land this turn.");
     }
     lands_played += 1;
