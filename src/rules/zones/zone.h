@@ -17,14 +17,17 @@ public:
     Zone(Game& game);
     std::map<int, std::vector<Card*>> cards;
 
-    virtual void add(Card& card);
+    virtual void move(Card& card);
     virtual void remove(Card& card);
     size_t numCards(Player& player) const;
+    bool contains(Card* card, Player& player) const;
 };
 
 class Library : public Zone {
 public:
     Library(Game& game);
+    void shuffle(const Player& player);
+    Card* top(const Player& player);
 };
 
 class Graveyard : public Zone {

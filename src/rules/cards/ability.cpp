@@ -4,11 +4,11 @@
 #include "rules/engine/game.h"
 #include "rules/cards/card.h"
 
-ActivatedAbility::ActivatedAbility(Card& card) : card(card) {
+ActivatedAbility::ActivatedAbility() {
     uses_stack = true;
 }
 
-ManaAbility::ManaAbility(const Mana& mana, Card& card) : mana(mana), ActivatedAbility(card) {
+ManaAbility::ManaAbility(const Mana& mana) : mana(mana) {
     uses_stack = false;
 }
 

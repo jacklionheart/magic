@@ -29,7 +29,6 @@ enum class CardType {
 class CardTypes {
 public:
     std::set<CardType> types;
-
     CardTypes() = default;
     CardTypes(const std::set<CardType>& types);
     bool isCastable() const;
@@ -38,7 +37,7 @@ public:
     bool isNonCreaturePermanent() const;
     bool isSpell() const;
     bool isCreature() const;
-    bool isLand() const;
+    bool isLand() const;    
     bool isPlaneswalker() const;
     bool isEnchantment() const;
     bool isArtifact() const;
@@ -48,6 +47,7 @@ public:
 
 class Card : public std::enable_shared_from_this<Card> {
 public:
+    std::string id;
     std::string name;
     std::optional<ManaCost> mana_cost;
     Colors colors;

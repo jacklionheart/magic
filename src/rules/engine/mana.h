@@ -13,6 +13,18 @@ enum class Color {
     GREEN
 };
 
+inline std::string toString(Color color) {
+    switch (color) {
+        case Color::WHITE:     return "W";
+        case Color::BLUE:      return "U";
+        case Color::BLACK:     return "B";
+        case Color::RED:       return "R";
+        case Color::GREEN:     return "G";
+        case Color::COLORLESS: return "C";
+        default:               return "?";
+    }
+}
+
 using Colors = std::set<Color>;
 
 class ManaCost {

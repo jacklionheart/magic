@@ -12,7 +12,7 @@ Battlefield::Battlefield(Game& game)
     }
 }
 
-void Battlefield::add(Card& card) {
+void Battlefield::move(Card& card) {
     enter(card);     
 }
 
@@ -21,7 +21,7 @@ void Battlefield::enter(Card& card) {
     if (!card.types.isPermanent()) {
         throw std::invalid_argument("Card is not a permanent: " + card.toString());
     }
-    Zone::add(card);
+    Zone::move(card);
     Player& controller = card.owner;
     permanents[controller.id].push_back(std::make_unique<Permanent>(card));
 }
@@ -33,6 +33,17 @@ void Battlefield::remove(Card& card) {
         std::remove_if(permanents[controller.id].begin(), permanents[controller.id].end(),
             [&card](const std::unique_ptr<Permanent>& permanent) { return &permanent->card == &card; }),
         permanents[controller.id].end());
+}
+
+Permanent* Battlefield::find(const Card& card) {
+    for (const auto& [player_id, player_permanents] : permanents) {
+        for (const std::unique_ptr<Permanent>& permanent : player_permanents) {
+            if (permanent->card.id == card.id) {
+                return permanent.get();
+            }
+        }
+    }
+    return nullptr;
 }
 
 Mana Battlefield::producableMana(Player& player) const {

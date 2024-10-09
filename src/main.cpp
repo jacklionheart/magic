@@ -7,7 +7,7 @@
 
 int main() {
     // Create empty decks for two players
-    std::vector<std::vector<Card>> decks(2);
+    std::vector<Deck> decks(2);    
 
     // Initialize the game
     Game game(decks);

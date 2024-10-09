@@ -14,44 +14,45 @@
 // If 'ManaAbility' or other dependencies are used, include their headers
 
 TEST(StackTest, AddAndResolveSpell) {
-    // **1. Correct Decks Initialization**
-    // Initialize decks as a vector of vectors of Card objects
-    std::vector<std::vector<Card>> decks(2); // Two empty decks for two players
-
-    // **2. Initialize the Game**
-    // Create a Game instance with the initialized decks
-    Game game(decks);
-
-    // **3. Create a Test Card**
-    // Create a Card object representing a spell (e.g., an Instant)
-    // Assuming 'Player' objects are already initialized in the Game constructor
-    // and that 'players[0]' is a valid reference
-    Card test_spell(
-        "Test Spell",                         // Name
-        std::nullopt,                         // No mana cost
-        CardTypes({CardType::INSTANT}),        // Card types (Instant)
-        std::vector<std::string>(),           // Supertypes
-        std::vector<std::string>(),           // Subtypes
-        std::vector<ManaAbility>(),           // Mana abilities (empty)
-        "",                                    // Text box
-        std::nullopt,                         // Power
-        std::nullopt,                         // Toughness
-        game.activePlayer()                     // Owner (Player 0)
+    Player player(0, "Player0");
+    std::vector<Deck> decks;
+    decks.push_back(Deck());
+    decks.push_back(Deck());
+     // Create a test spell
+    auto test_spell = std::make_unique<Card>(
+        "Test Spell",
+        std::nullopt,
+        CardTypes({CardType::INSTANT}),
+        std::vector<std::string>(),
+        std::vector<std::string>(),
+        std::vector<ManaAbility>(),
+        "",
+        std::nullopt,
+        std::nullopt,
+        player // Owner
     );
 
-    // **4. Cast the Spell**
-    // Use the Game's castSpell method to add the spell to the stack
-    game.castSpell(game.activePlayer(), test_spell);
+    decks.push_back(std::make_unique<Deck>());
+    decks[0]->cards.push_back(std::move(test_spell));
+    test_spell_card = decks[0]->cards[0].get();
+    decks.push_back(std::make_unique<Deck>());
 
-    // **5. Check Stack Size After Casting**
-    // Verify that the stack size is now 1
+    // Create the game
+    Game game(decks);
+    Player& player = game.players[0];
+
+    // Add the spell to the player's hand
+    game.zones.hand.move(*test_spell_card);
+
+    // Cast the spell
+    game.castSpell(player, *test_spell_card);
+
+    // Check stack size
     EXPECT_EQ(game.zones.stack.size(), 1);
 
-    // **6. Resolve the Top Spell**
-    // Resolve the top spell on the stack
+    // Resolve the top spell
     game.zones.stack.resolveTop();
 
-    // **7. Check Stack Size After Resolving**
-    // Verify that the stack size is now 0
+    // Check that the stack is now empty
     EXPECT_EQ(game.zones.stack.size(), 0);
 }

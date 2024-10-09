@@ -11,10 +11,9 @@ class Card;
 
 class ActivatedAbility {
 public:
-    Card& card;
     bool uses_stack;
 
-    ActivatedAbility(Card& card);
+    ActivatedAbility();
 
     virtual void payCost(Permanent& permanent, Game& game) = 0;
     virtual bool canBeActivated(const Permanent& permanent, const Game& game) const = 0;
@@ -26,7 +25,7 @@ class ManaAbility : public ActivatedAbility {
 public:
     Mana mana;
 
-    ManaAbility(const Mana& mana, Card& card);
+    ManaAbility(const Mana& mana);
 
     void payCost(Permanent& permanent, Game& game) override;
     bool canBeActivated(const Permanent& permanent, const Game& game) const override;

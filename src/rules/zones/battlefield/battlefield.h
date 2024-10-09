@@ -18,10 +18,12 @@ public:
     
     Battlefield(Game& game);
 
-    virtual void add(Card& card) override;
+    virtual void move(Card& card) override;
     virtual void remove(Card& card) override;
 
     void enter(Card& card);
+
+    Permanent* find(const Card& card);
 
     Mana producableMana(Player& player) const;
     void produceMana(const ManaCost& mana_cost, Player& player);

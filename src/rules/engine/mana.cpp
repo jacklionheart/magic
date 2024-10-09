@@ -165,20 +165,12 @@ void Mana::clear() {
     }
 }
 
+
 std::string Mana::toString() const {
     std::string result = "{ ";
     for (const auto& [color, amount] : mana) {
         if (amount > 0) {
-            std::string color_name;
-            switch (color) {
-                case Color::COLORLESS: color_name = "C"; break;
-                case Color::WHITE:     color_name = "W";     break;
-                case Color::BLUE:      color_name = "U";      break;
-                case Color::BLACK:     color_name = "B";     break;
-                case Color::RED:       color_name = "R";       break;
-                case Color::GREEN:     color_name = "G";     break;
-            }
-            result += color_name + ": " + std::to_string(amount) + ", ";
+            result += ::toString(color) + ": " + std::to_string(amount) + ", ";
         }
     }
     result += "}";

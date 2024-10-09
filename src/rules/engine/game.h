@@ -31,8 +31,9 @@ public:
     Zones(Game& game);
 };
 
-class Deck {
-    const std::vector<Card> cards ;
+struct Deck {
+public:
+    std::vector<std::unique_ptr<Card>> cards;
 };
 
 class Game {
@@ -47,7 +48,7 @@ public:
     int global_turn_count;
     std::map<int, int> player_turn_counts;
 
-    Game(const std::vector<std::vector<Card>>& decks);
+    Game(const std::vector<Deck>& decks);
 
     void play();
     bool isGameOver() const;

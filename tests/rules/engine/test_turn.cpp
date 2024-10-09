@@ -7,7 +7,9 @@
 
 TEST(TurnTest, ExecuteTurn) {
     // Set up a simple game with two players
-    std::vector<std::vector<Card>> decks(2); // Empty decks for now
+    std::vector<Deck> decks;
+    decks.push_back(Deck());
+    decks.push_back(Deck());
     Game game = Game(decks);
 
     // Simulate a turn

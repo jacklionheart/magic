@@ -1,12 +1,14 @@
 // permanent.cpp
 #include "permanent.h"
 #include "rules/engine/game.h"
+#include "util/uuid.h"
 #include <cassert>
 
 Permanent::Permanent(Card& card) :
       controller(card.owner),
       card(card) {
 
+    id = uuid::generate();
     tapped = false;
     summoning_sick = card.types.isCreature();
     damage = 0;
@@ -59,9 +61,6 @@ void Permanent::activateAllManaAbilities(Game& game) {
 
 void Permanent::activateAbility(ActivatedAbility* ability, Game& game) {
     assert(ability != nullptr);
-    if (&ability->card != &card) {
-        throw std::logic_error("Ability on a different card.");
-    }
     if (!ability->canBeActivated(*this, game)) {
         throw std::logic_error("Ability cannot be activated.");
     }

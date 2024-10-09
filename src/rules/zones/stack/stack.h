@@ -17,7 +17,7 @@ public:
     void cast(Card &);
     void resolveTop();
 
-    virtual void add(Card& card) override;
+    virtual void move(Card& card) override;
     virtual void remove(Card& card) override;
 
     size_t size() const;

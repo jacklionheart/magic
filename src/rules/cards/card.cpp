@@ -1,6 +1,7 @@
 // card.cpp
 #include "card.h"
 #include "rules/zones/zone.h"
+#include "util/uuid.h"
 #include <format>
 
 CardTypes::CardTypes(const std::set<CardType>& types) : types(types) {}
@@ -79,6 +80,9 @@ Card::Card(const std::string& name,
       toughness(toughness),
       owner(owner),
       current_zone(nullptr) {
+
+    id = uuid::generate();
+
     if (mana_cost.has_value()) {
         colors = mana_cost->colors();
     } else {

@@ -25,7 +25,7 @@ Zones::Zones(Game& game)
       command(game)
 {}
 
-Game::Game(const std::vector<std::vector<Card>>& decks) : zones(*this), action_space(*this) {
+Game::Game(const std::vector<Deck>& decks) : zones(*this), action_space(*this) {
     assert(decks.size() == 2);
     // Initialize players
     for (size_t i = 0; i < decks.size(); ++i) {
@@ -37,6 +37,22 @@ Game::Game(const std::vector<std::vector<Card>>& decks) : zones(*this), action_s
         mana_pools[player.id] = Mana();
         player_turn_counts[player.id] = 0;
     }
+
+    // Initialize libraries with the decks
+    for (size_t i = 0; i < decks.size(); ++i) {
+        Player& player = players[i];
+        const Deck& deck = decks[i];
+        for (const std::unique_ptr<Card>& card : deck.cards) {
+            zones.library.move(*card);
+        }
+
+        zones.library.shuffle(player);
+
+        for (int i = 0; i < std::min<int>(7, zones.library.numCards(player)); ++i) {
+            zones.hand.move(*zones.library.top(player));
+        }
+    }
+
     global_turn_count = 0;
     active_player_index = 0;
     lands_played = 0;

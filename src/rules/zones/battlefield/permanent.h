@@ -16,6 +16,8 @@ class ActivatedAbility;
 
 class Permanent {
 public:
+    std::string id;
+
     Card& card;
     bool tapped = false;
     bool summoning_sick = false;
