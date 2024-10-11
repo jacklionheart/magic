@@ -1,14 +1,15 @@
 // permanent.cpp
 #include "permanent.h"
 #include "rules/engine/game.h"
-#include "util/uuid.h"
 #include <cassert>
 
+int Permanent::next_id = 0;
+
 Permanent::Permanent(Card& card) :
-      controller(card.owner),
+      controller_id(card.owner_id),
+      id(next_id++),
       card(card) {
 
-    id = uuid::generate();
     tapped = false;
     summoning_sick = card.types.isCreature();
     damage = 0;
@@ -72,4 +73,8 @@ void Permanent::activateAbility(ActivatedAbility* ability, Game& game) {
     } else {
         ability->resolve(*this, game);
     }
+}
+
+bool Permanent::operator==(const Permanent& other) const {
+    return this->id == other.id;
 }

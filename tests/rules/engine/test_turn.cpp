@@ -6,11 +6,11 @@
 #include "rules/engine/player.h"
 
 TEST(TurnTest, ExecuteTurn) {
-    // Set up a simple game with two players
-    std::vector<Deck> decks;
-    decks.push_back(Deck());
-    decks.push_back(Deck());
-    Game game = Game(decks);
+    std::vector<Player> players;
+    players.emplace_back("Player1", Deck());
+    players.emplace_back("Player2", Deck());
+
+    Game game(players);
 
     // Simulate a turn
     Turn turn = Turn(game.activePlayer(), game);

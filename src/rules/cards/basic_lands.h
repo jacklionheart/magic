@@ -7,10 +7,10 @@
 
 #include <memory>
 // Function declarations
-std::unique_ptr<Card> createBasicLandCard(const std::string& name, Color color, Player& owner);
+Card createBasicLandCard(const std::string& name, Color color, int owner_id);
 
-std::unique_ptr<Card> basicPlains(Player& owner);
-std::unique_ptr<Card> basicIsland(Player& owner);
-std::unique_ptr<Card> basicMountain(Player& owner);
-std::unique_ptr<Card> basicForest(Player& owner);
-std::unique_ptr<Card> basicSwamp(Player& owner);
+Card basicPlains(int owner_id);
+Card basicIsland(int owner_id);
+Card basicMountain(int owner_id);
+Card basicForest(int owner_id);
+Card basicSwamp(int owner_id);

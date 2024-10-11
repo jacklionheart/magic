@@ -11,6 +11,8 @@ class Card;
 
 class ActivatedAbility {
 public:
+    static int next_id;
+    int id;
     bool uses_stack;
 
     ActivatedAbility();

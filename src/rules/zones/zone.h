@@ -20,7 +20,7 @@ public:
     virtual void move(Card& card);
     virtual void remove(Card& card);
     size_t numCards(Player& player) const;
-    bool contains(Card* card, Player& player) const;
+    bool contains(const Card& card, const int player_id) const;
 };
 
 class Library : public Zone {

@@ -6,11 +6,11 @@
 #include "rules/cards/card.h"  // Include this to use Card
 
 int main() {
-    // Create empty decks for two players
-    std::vector<Deck> decks(2);    
-
     // Initialize the game
-    Game game(decks);
+    std::vector<Player> players;
+    players.emplace_back("Player1", Deck());
+    players.emplace_back("Player2", Deck());
+    Game game(players);
 
     // Play the game
     game.play();

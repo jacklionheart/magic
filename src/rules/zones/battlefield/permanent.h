@@ -16,13 +16,15 @@ class ActivatedAbility;
 
 class Permanent {
 public:
-    std::string id;
+    int id;
+    static int next_id;
 
+    // TODO: make an ID
     Card& card;
     bool tapped = false;
     bool summoning_sick = false;
     int damage = 0;
-    Player& controller;
+    int controller_id;
     
     Permanent(Card& card);
 
@@ -35,4 +37,6 @@ public:
     Mana producableMana(Game& game) const;
     void activateAllManaAbilities(Game& game);
     void activateAbility(ActivatedAbility* ability, Game& game);
+
+    bool operator==(const Permanent& other) const;
 };

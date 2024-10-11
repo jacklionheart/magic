@@ -31,14 +31,11 @@ public:
     Zones(Game& game);
 };
 
-struct Deck {
-public:
-    std::vector<std::unique_ptr<Card>> cards;
-};
 
 class Game {
 public:
-    std::vector<Player> players;
+    std::vector<Player>& players;
+    std::map<int, Card*> cards;
     ActionSpace action_space;
     Zones zones;
     std::unique_ptr<Turn> current_turn;
@@ -48,7 +45,7 @@ public:
     int global_turn_count;
     std::map<int, int> player_turn_counts;
 
-    Game(const std::vector<Deck>& decks);
+    Game(std::vector<Player>& players);
 
     void play();
     bool isGameOver() const;
@@ -57,13 +54,14 @@ public:
     void allowPlayerActions();
 
     // Lookups
-    std::vector<Card*> cardsInHand(Player& player);
+    Card& card(int id);
+    std::vector<Card*> cardsInHand(int player_id);
     Player& activePlayer();
-    bool isActivePlayer(Player& player) const;
-    bool canPlayLand(Player& player) const;
+    bool isActivePlayer(int player_id) const;
+    bool canPlayLand(int player_id) const;
 
     // Game State Mutations
-    void addMana(Player& player, const Mana& mana);
-    void castSpell(Player& player, Card& card);
-    void playLand(Player& player, Card& card);
+    void addMana(int player_id, const Mana& mana);
+    void castSpell(int player_id, Card& card);
+    void playLand(int player_id, Card& card);
 };

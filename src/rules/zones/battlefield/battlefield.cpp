@@ -22,23 +22,23 @@ void Battlefield::enter(Card& card) {
         throw std::invalid_argument("Card is not a permanent: " + card.toString());
     }
     Zone::move(card);
-    Player& controller = card.owner;
-    permanents[controller.id].push_back(std::make_unique<Permanent>(card));
+    int controller_id = card.owner_id;
+    permanents[controller_id].push_back(std::make_unique<Permanent>(card));
 }
 
 void Battlefield::remove(Card& card) {
     Zone::remove(card);
-    Player& controller = card.owner;
-    permanents[controller.id].erase(
-        std::remove_if(permanents[controller.id].begin(), permanents[controller.id].end(),
+    int controller_id = card.owner_id;
+    permanents[controller_id].erase(
+        std::remove_if(permanents[controller_id].begin(), permanents[controller_id].end(),
             [&card](const std::unique_ptr<Permanent>& permanent) { return &permanent->card == &card; }),
-        permanents[controller.id].end());
+        permanents[controller_id].end());
 }
 
 Permanent* Battlefield::find(const Card& card) {
     for (const auto& [player_id, player_permanents] : permanents) {
         for (const std::unique_ptr<Permanent>& permanent : player_permanents) {
-            if (permanent->card.id == card.id) {
+            if (permanent->card == card) {
                 return permanent.get();
             }
         }

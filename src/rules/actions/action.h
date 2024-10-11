@@ -10,9 +10,9 @@ class Player;
 class Action {
 
 public:
-    Player& player;
+    int player_id;
     bool retainPriority = true;
-    Action(Player& player);
+    Action(int player_id);
 
     virtual void execute(Game& game) = 0;
     virtual ~Action() = default;
@@ -22,7 +22,7 @@ class PlayLand : public Action {
 public:
     Card& card;
 
-    PlayLand(Player& player, Card& card);
+    PlayLand(int player_id, Card& card);
 
     void execute(Game& game) override;
 };
@@ -31,14 +31,14 @@ class CastSpell : public Action {
 public:
     Card& card;
 
-    CastSpell(Player& player, Card& card);
+    CastSpell(int player_id, Card& card);
 
     void execute(Game& game) override;
 };
 
 class PassPriority : public Action {
 public:
-    PassPriority(Player& player);
+    PassPriority(int player_id);
 
     void execute(Game& game) override;
 };

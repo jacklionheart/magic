@@ -25,30 +25,35 @@ Zones::Zones(Game& game)
       command(game)
 {}
 
-Game::Game(const std::vector<Deck>& decks) : zones(*this), action_space(*this) {
-    assert(decks.size() == 2);
-    // Initialize players
-    for (size_t i = 0; i < decks.size(); ++i) {
-        players.push_back(Player(static_cast<int>(i), "Player " + std::to_string(i)));
+Game::Game(std::vector<Player>& players) : players(players), zones(*this), action_space(*this) {
+    if (this->players.size() != 2) {
+        throw std::invalid_argument("Game must start with 2 players.");
     }
 
     // Initialize mana pools and turn counts
-    for (const Player& player : players) {
+    for (const Player& player : this->players) {
         mana_pools[player.id] = Mana();
         player_turn_counts[player.id] = 0;
     }
 
-    // Initialize libraries with the decks
-    for (size_t i = 0; i < decks.size(); ++i) {
-        Player& player = players[i];
-        const Deck& deck = decks[i];
-        for (const std::unique_ptr<Card>& card : deck.cards) {
-            zones.library.move(*card);
+    // Initialize cards map
+    for (Player& player : this->players) {
+        for (Card& card : player.deck) {
+            cards[card.id] = &card;
+        }
+    }
+
+    // Initialize libraries with the decks, then draw up to 7 cards
+    for (Player& player : this->players) {
+        Deck& deck = player.deck;
+        for (Card& card : deck) {
+            zones.library.move(card);
         }
 
         zones.library.shuffle(player);
 
-        for (int i = 0; i < std::min<int>(7, zones.library.numCards(player)); ++i) {
+        int starting_hand_size = std::min<int>(7, zones.library.numCards(player));
+        for (int i = 0; i < starting_hand_size; ++i) {
             zones.hand.move(*zones.library.top(player));
         }
     }
@@ -105,43 +110,47 @@ void Game::allowPlayerActions() {
 }
 
 
-std::vector<Card*> Game::cardsInHand(Player& player) {
-    return zones.hand.cards[player.id];
+std::vector<Card*> Game::cardsInHand(int player_id) {
+    return zones.hand.cards[player_id];
 }
 
 Player& Game::activePlayer() {
     return players.at(active_player_index);
 }
 
-bool Game::isActivePlayer(Player& player) const {
-    return player == players.at(active_player_index);
+Card& Game::card(int id) {
+    return *cards.at(id);
 }
 
-bool Game::canPlayLand(Player& player) const {
-    return isActivePlayer(player) && lands_played < 1;
+bool Game::isActivePlayer(int player_id) const {
+    return player_id == players.at(active_player_index).id;
+}
+
+bool Game::canPlayLand(int player_id) const {
+    return isActivePlayer(player_id) && lands_played < 1;
 }
 
 // Game State Mutations
 
-void Game::addMana(Player& player, const Mana& mana) {
-    mana_pools[player.id].add(mana);
+void Game::addMana(int player_id, const Mana& mana) {
+    mana_pools[player_id].add(mana);
 }
 
-void Game::castSpell(Player& player,Card& card) {
+void Game::castSpell(int player_id, Card& card) {
     if (card.types.isLand()) {
         throw std::invalid_argument("Land cards cannot be cast.");
     }
-    if (card.owner != player) {
+    if (card.owner_id != player_id) {
         throw std::invalid_argument("Card does not belong to player.");
     }
     zones.stack.cast(card);   
 }
 
-void Game::playLand(Player& player, Card& card) {
+void Game::playLand(int player_id, Card& card) {
     if (!card.types.isLand()) {
         throw std::invalid_argument("Only land cards can be played.");
     }
-    if (!canPlayLand(player)) {
+    if (!canPlayLand(player_id)) {
         throw std::logic_error("Cannot play land this turn.");
     }
     lands_played += 1;

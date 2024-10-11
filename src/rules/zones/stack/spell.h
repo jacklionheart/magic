@@ -17,8 +17,12 @@ public:
 
 class Spell : public StackObject {
 public:
-    Card& card;
-    Player& controller;
+    static int next_id;
+
+    int id;
+
+    int card_id;
+    int controller_id;
 
     Spell(Card& card);
 

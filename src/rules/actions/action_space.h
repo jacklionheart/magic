@@ -15,5 +15,5 @@ public:
 
     ActionSpace(Game& game);
 
-    std::vector<std::unique_ptr<Action>> getActions(Player& player);
+    std::vector<std::unique_ptr<Action>> getActions(int player_id);
 };

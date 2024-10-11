@@ -7,12 +7,11 @@
 #include <format>
 
 #include "rules/engine/mana.h"
-#include "rules/engine/player.h"
 #include "rules/cards/ability.h"
-#include "rules/cards/card.h"
 
 class Zone; // Forward declaration
 class ActivatedAbilitySchema;
+class Player; 
 
 enum class CardType {
     CREATURE,
@@ -45,9 +44,11 @@ public:
     bool isBattle() const;
 };
 
-class Card : public std::enable_shared_from_this<Card> {
+class Card {
 public:
-    std::string id;
+    static int next_id;
+    int id;
+
     std::string name;
     std::optional<ManaCost> mana_cost;
     Colors colors;
@@ -58,11 +59,12 @@ public:
     std::string text_box;
     std::optional<int> power;      // Use std::optional for optional values
     std::optional<int> toughness;
-    Player& owner;
+    int owner_id;
     Zone* current_zone;
 
     std::string toString() const;
     void removeFromCurrentZone();
+    bool operator==(const Card& other) const;
 
     Card(const std::string& name,
          std::optional<ManaCost> mana_cost,
@@ -73,5 +75,5 @@ public:
          const std::string& text_box,
          std::optional<int> power,
          std::optional<int> toughness,
-         Player& owner);
+         int owner_id);
 };

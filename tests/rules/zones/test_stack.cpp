@@ -14,12 +14,12 @@
 // If 'ManaAbility' or other dependencies are used, include their headers
 
 TEST(StackTest, AddAndResolveSpell) {
-    Player player(0, "Player0");
-    std::vector<Deck> decks;
-    decks.push_back(Deck());
-    decks.push_back(Deck());
+    std::vector<Player> players;
+    players.emplace_back("Player1", Deck());
+    players.emplace_back("Player2", Deck());
+    
      // Create a test spell
-    auto test_spell = std::make_unique<Card>(
+    Card test_spell(
         "Test Spell",
         std::nullopt,
         CardTypes({CardType::INSTANT}),
@@ -29,23 +29,19 @@ TEST(StackTest, AddAndResolveSpell) {
         "",
         std::nullopt,
         std::nullopt,
-        player // Owner
+        players[0].id // Owner
     );
 
-    decks.push_back(std::make_unique<Deck>());
-    decks[0]->cards.push_back(std::move(test_spell));
-    test_spell_card = decks[0]->cards[0].get();
-    decks.push_back(std::make_unique<Deck>());
+
+    players[0].deck.push_back(test_spell);
+
 
     // Create the game
-    Game game(decks);
+    Game game(players);
     Player& player = game.players[0];
 
-    // Add the spell to the player's hand
-    game.zones.hand.move(*test_spell_card);
-
     // Cast the spell
-    game.castSpell(player, *test_spell_card);
+    game.castSpell(player.id, test_spell);
 
     // Check stack size
     EXPECT_EQ(game.zones.stack.size(), 1);

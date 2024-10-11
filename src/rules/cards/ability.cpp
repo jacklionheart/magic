@@ -4,11 +4,13 @@
 #include "rules/engine/game.h"
 #include "rules/cards/card.h"
 
-ActivatedAbility::ActivatedAbility() {
+int ActivatedAbility::next_id = 0;
+
+ActivatedAbility::ActivatedAbility() : id(next_id++) {
     uses_stack = true;
 }
 
-ManaAbility::ManaAbility(const Mana& mana) : mana(mana) {
+ManaAbility::ManaAbility(const Mana& mana) : ActivatedAbility(), mana(mana) {
     uses_stack = false;
 }
 
@@ -21,5 +23,5 @@ bool ManaAbility::canBeActivated(const Permanent& permanent, const Game& game) c
 }
 
 void ManaAbility::resolve(Permanent& permanent, Game& game) {
-    game.addMana(permanent.controller, mana);
+    game.addMana(permanent.controller_id, mana);
 }

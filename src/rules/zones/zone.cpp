@@ -19,35 +19,37 @@ void Zone::move(Card& card) {
             throw std::logic_error(std::format("Card {} is already in this zone {}", card.toString(), std::string(typeid(*this).name())));
         }
         previous_zone->remove(card);
-        assert(!previous_zone->contains(&card, card.owner));
+        assert(!previous_zone->contains(card, card.owner_id));
     }
     card.current_zone = this;
-    cards[card.owner.id].push_back(&card);
-    assert(contains(&card, card.owner));
+    cards[card.owner_id].push_back(&card);
+    assert(contains(card, card.owner_id));
 }
 
 void Zone::remove(Card& card) {
     if (card.current_zone == this) {
         card.current_zone = nullptr;
-        std::vector<Card*> player_cards = cards[card.owner.id];
+        std::vector<Card*>& player_cards = cards[card.owner_id];
         player_cards.erase(std::remove(player_cards.begin(), player_cards.end(), &card), player_cards.end());
-        assert(!contains(&card, card.owner));
+        assert(!contains(card, card.owner_id));
     } else {
         throw std::invalid_argument(std::format("Card {} is not in this zone {}.", card.toString(), std::string(typeid(*this).name())));
     }
 }
 
-bool Zone::contains(Card* card, Player& player) const {
-    return std::find(cards.at(player.id).begin(), cards.at(player.id).end(), card) != cards.at(player.id).end();
-}   
+bool Zone::contains(const Card& card, const int player_id) const {
+    const auto& playerCards = cards.at(player_id);
+    return std::any_of(playerCards.begin(), playerCards.end(), 
+                       [&card](const Card* c) { return *c == card;});
+}
+
 
 void Library::shuffle(const Player& player) {
-    std::vector<Card*> player_cards = cards[player.id];
-    std::shuffle(player_cards.begin(), player_cards.end(), std::mt19937(std::random_device()()));
+    std::shuffle(cards[player.id].begin(), cards[player.id].end(), std::mt19937(std::random_device()()));
 }
 
 Card* Library::top(const Player& player) {
-    std::vector<Card*> player_cards = cards[player.id];
+    std::vector<Card*>& player_cards = cards[player.id];
     return player_cards.back();
 }
 

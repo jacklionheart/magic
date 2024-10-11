@@ -1,7 +1,6 @@
 // card.cpp
 #include "card.h"
 #include "rules/zones/zone.h"
-#include "util/uuid.h"
 #include <format>
 
 CardTypes::CardTypes(const std::set<CardType>& types) : types(types) {}
@@ -59,6 +58,8 @@ bool CardTypes::isBattle() const {
     return types.contains(CardType::BATTLE);
 }
 
+int Card::next_id = 0;
+
 Card::Card(const std::string& name,
            std::optional<ManaCost> mana_cost,
            const CardTypes& types,
@@ -68,8 +69,10 @@ Card::Card(const std::string& name,
            const std::string& text_box,
            std::optional<int> power,
            std::optional<int> toughness,
-           Player& owner)
-    : name(name),
+           int owner_id)
+    : 
+      id(next_id++),
+      name(name),
       mana_cost(mana_cost),
       types(types),
       supertypes(supertypes),
@@ -78,10 +81,8 @@ Card::Card(const std::string& name,
       text_box(text_box),
       power(power),
       toughness(toughness),
-      owner(owner),
+      owner_id(owner_id),
       current_zone(nullptr) {
-
-    id = uuid::generate();
 
     if (mana_cost.has_value()) {
         colors = mana_cost->colors();
@@ -95,6 +96,10 @@ void Card::removeFromCurrentZone() {
         current_zone->remove(*this);
     }
     current_zone = nullptr;
+}
+
+bool Card::operator==(const Card& other) const {
+    return this->id == other.id;
 }
 
 std::string Card::toString() const {

@@ -15,7 +15,7 @@ void Stack::move(Card& card) {
 void Stack::remove(Card& card) {
     Zone::remove(card);
     objects.erase(std::remove_if(objects.begin(), objects.end(),
-        [&card](const std::unique_ptr<Spell>& spell) { return &spell->card == &card; }),
+        [&card](const std::unique_ptr<Spell>& spell) { return spell->card_id == card.id; }),
         objects.end()); 
 }
 

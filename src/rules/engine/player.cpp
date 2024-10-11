@@ -3,8 +3,9 @@
 #include "rules/engine/game.h"
 #include "rules/actions/action_space.h"
 
-Player::Player(int id, const std::string& name)
-    : id(id), name(name), life(20) {}
+int Player::next_id = 0;
+Player::Player(const std::string& name, Deck deck)
+    : id(next_id++), name(name), life(20), deck(deck) {}
 
 bool Player::operator==(const Player& other) const {
     return id == other.id;
@@ -15,7 +16,7 @@ size_t Player::hash() const {
 }
 
 std::unique_ptr<Action> Player::receivePriority(Game& game) {
-    std::vector<std::unique_ptr<Action>> actions = game.action_space.getActions(*this);
+    std::vector<std::unique_ptr<Action>> actions = game.action_space.getActions(id);
     // For simplicity, return the first action
     return std::move(actions.front());
 }

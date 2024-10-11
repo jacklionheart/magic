@@ -2,17 +2,21 @@
 
 #include <string>
 #include <memory>
+#include "rules/cards/deck.h"
 
 class Game; // Forward Declaration
 class Action;
 
-class Player : public std::enable_shared_from_this<Player> {
+
+class Player {
 public:
+    static int next_id;
     int id;
+    Deck deck;
     std::string name;
     int life;
 
-    Player(int id, const std::string& name);
+    Player(const std::string& name, Deck deck);
 
     bool operator==(const Player& other) const;
     size_t hash() const;

@@ -1,16 +1,14 @@
 // basic_lands.cpp
 #include "basic_lands.h"
 
-std::unique_ptr<Card> createBasicLandCard(const std::string& name, Color color, Player& owner) {
+Card createBasicLandCard(const std::string& name, Color color, int owner_id) {
 
     // Create the ManaAbility for this basic land
     Mana mana;
     mana.mana[color] = 1;
     ManaAbility mana_ability(mana);
 
-
-    // Create the card
-    Card card(
+    return Card(
         name,
         std::nullopt,     // No mana cost for basic lands
         CardTypes({CardType::LAND}),
@@ -20,28 +18,25 @@ std::unique_ptr<Card> createBasicLandCard(const std::string& name, Color color, 
         "{T}: Add {" + toString(color) + "}.",
         std::nullopt,     // No power
         std::nullopt,     // No toughness
-        owner
+        owner_id
     );
-
-    return std::make_unique<Card>(card);
+}
+Card basicPlains(int owner_id) {
+    return createBasicLandCard("Plains", Color::WHITE, owner_id);
 }
 
-std::unique_ptr<Card> basicPlains(Player& owner) {
-    return createBasicLandCard("Plains", Color::WHITE, owner);
+Card basicIsland(int owner_id) {
+    return createBasicLandCard("Island", Color::BLUE, owner_id);
 }
 
-std::unique_ptr<Card> basicIsland(Player& owner) {
-    return createBasicLandCard("Island", Color::BLUE, owner);
+Card basicMountain(int owner_id) {
+    return createBasicLandCard("Mountain", Color::RED, owner_id);
 }
 
-std::unique_ptr<Card> basicMountain(Player& owner) {
-    return createBasicLandCard("Mountain", Color::RED, owner);
+Card basicForest(int owner_id) {
+    return createBasicLandCard("Forest", Color::GREEN, owner_id);
 }
 
-std::unique_ptr<Card> basicForest(Player& owner) {
-    return createBasicLandCard("Forest", Color::GREEN, owner);
-}
-
-std::unique_ptr<Card> basicSwamp(Player& owner) {
-    return createBasicLandCard("Swamp", Color::BLACK, owner);
+Card basicSwamp(int owner_id) {
+    return createBasicLandCard("Swamp", Color::BLACK, owner_id);
 }
