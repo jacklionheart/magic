@@ -1,20 +1,18 @@
 // basic_lands.cpp
 #include "basic_lands.h"
 
+#include "ability.h"
+
 Card createBasicLandCard(const std::string& name, Color color, int owner_id) {
 
-    // Create the ManaAbility for this basic land
-    Mana mana;
-    mana.mana[color] = 1;
-    ManaAbility mana_ability(mana);
-
+    
     return Card(
         name,
         std::nullopt,     // No mana cost for basic lands
         CardTypes({CardType::LAND}),
         {"basic"},
         {name},
-        {mana_ability},
+        {ManaAbility(Mana::single(color))},
         "{T}: Add {" + toString(color) + "}.",
         std::nullopt,     // No power
         std::nullopt,     // No toughness

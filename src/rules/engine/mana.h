@@ -42,6 +42,8 @@ public:
 class Mana {
 public:
     std::map<Color, int> mana;
+    static Mana parse(const std::string& mana_cost_str);
+    static Mana single(Color color);
 
     Mana();
     void add(const Mana& other);

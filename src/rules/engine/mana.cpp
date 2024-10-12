@@ -64,6 +64,40 @@ std::string ManaCost::toString() const {
     return result;
 }
 
+Mana Mana::parse(const std::string& mana_str) {
+    Mana mana;
+    size_t i = 0;
+    while (i < mana_str.length()) {
+        char c = mana_cost_str[i];
+        if (std::isdigit(c)) {
+            int num = 0;
+            while (i < mana_cost_str.length() && std::isdigit(mana_cost_str[i])) {
+                num = num * 10 + (mana_cost_str[i] - '0');
+                i++;
+            }
+            mana.mana[Color::COLORLESS] += num;
+        } else {
+            switch (c) {
+                case 'C': mana.mana[Color::COLORLESS] += 1; break;
+                case 'W': mana.mana[Color::WHITE] += 1; break;
+                case 'U': mana.mana[Color::BLUE] += 1; break;
+                case 'B': mana.mana[Color::BLACK] += 1; break;
+                case 'R': mana.mana[Color::RED] += 1; break;
+                case 'G': mana.mana[Color::GREEN] += 1; break;
+                default:
+                    throw std::invalid_argument(std::string("Invalid character in mana cost: ") + c);
+            }
+            i++;
+        }
+    }
+    return mana_cost;
+}
+
+Mana Mana::single(Color color) {
+    Mana mana;
+    mana.mana[color] = 1;
+    return mana;
+}
 Colors ManaCost::colors() const {
     Colors colors_set;
     for (const auto& [color, quantity] : cost) {

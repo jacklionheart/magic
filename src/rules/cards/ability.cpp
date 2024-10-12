@@ -25,3 +25,7 @@ bool ManaAbility::canBeActivated(const Permanent& permanent, const Game& game) c
 void ManaAbility::resolve(Permanent& permanent, Game& game) {
     game.addMana(permanent.controller_id, mana);
 }
+
+ManaAbility tapForMana(const std::string& mana_str) {
+    return ManaAbility(Mana::parse(mana_str));
+}
